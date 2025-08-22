@@ -7,13 +7,13 @@ const Hero = () => {
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
         <div className="md:w-1/2 mb-10 md:mb-0">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4">
-            Hi, I'm <span className="text-primary">Hanzala Khan</span>
+            Hi, I&apos;m <span className="text-primary">Hanzala Khan</span>
           </h1>
           <h2 className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-6">
             Software & Android Developer
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-lg">
-            Fresher with a Bachelor's degree in Information Technology. Passionate about Android app development and full-stack technologies. Looking to begin a career as a Software or Android Developer.
+            Fresher with a Bachelor&apos;s degree in Information Technology. Passionate about Android app development and full-stack technologies. Looking to begin a career as a Software or Android Developer.
           </p>
           <div className="flex flex-wrap gap-4">
             <a 

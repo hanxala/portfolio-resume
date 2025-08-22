@@ -8,7 +8,7 @@ const About = () => {
         
         <div className="max-w-3xl mx-auto">
           <p className="text-gray-700 dark:text-gray-300 mb-6 text-lg">
-            I am a motivated and enthusiastic fresher with a Bachelor's degree in Information Technology from K.P.B Hinduja College, Mumbai University. My passion lies in Android app development and full-stack technologies, with a strong foundation in Kotlin, Firebase, and web development.
+            I am a motivated and enthusiastic fresher with a Bachelor&apos;s degree in Information Technology from K.P.B Hinduja College, Mumbai University. My passion lies in Android app development and full-stack technologies, with a strong foundation in Kotlin, Firebase, and web development.
           </p>
           
           <p className="text-gray-700 dark:text-gray-300 mb-6 text-lg">

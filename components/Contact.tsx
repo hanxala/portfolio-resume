@@ -49,7 +49,7 @@ const Contact = () => {
           <div>
             <h3 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200">Get In Touch</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-8">
-              Feel free to contact me for any work or suggestions. I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.  
+              Feel free to contact me for any work or suggestions. I&apos;m always open to discussing new projects, creative ideas, or opportunities to be part of your vision.  
             </p>
             
             <div className="space-y-4">
