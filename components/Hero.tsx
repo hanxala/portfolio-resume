@@ -10,10 +10,10 @@ const Hero = () => {
             Hi, I&apos;m <span className="text-primary">Hanzala Khan</span>
           </h1>
           <h2 className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-6">
-            Software & Android Developer
+            Software Developer & Android App Developer (Fresher)
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-lg">
-            Fresher with a Bachelor&apos;s degree in Information Technology. Passionate about Android app development and full-stack technologies. Looking to begin a career as a Software or Android Developer.
+            Fresher with a Bachelor of Science in Information Technology. Passionate about software development and mobile app design. Seeking an opportunity as a Software Developer or Android App Developer to build efficient and user-friendly applications.
           </p>
           <div className="flex flex-wrap gap-4">
             <a 

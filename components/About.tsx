@@ -8,15 +8,15 @@ const About = () => {
         
         <div className="max-w-3xl mx-auto">
           <p className="text-gray-700 dark:text-gray-300 mb-6 text-lg">
-            I am a motivated and enthusiastic fresher with a Bachelor&apos;s degree in Information Technology from K.P.B Hinduja College, Mumbai University. My passion lies in Android app development and full-stack technologies, with a strong foundation in Kotlin, Firebase, and web development.
+            I am a motivated and detail-oriented Bachelor of Science in Information Technology graduate with strong foundations in software development and mobile app design. Seeking an opportunity as a Software Developer or Android App Developer to apply my skills in Next.js, React, Node.js, Python, and Kotlin for building efficient and user-friendly applications.
           </p>
           
           <p className="text-gray-700 dark:text-gray-300 mb-6 text-lg">
-            During my academic journey, I developed an Android application using Kotlin and Firebase that allows students to participate in quizzes and coding competitions. This project helped me gain practical experience in mobile app development, user authentication, and real-time database management.
+            During my academic journey, I developed an e-commerce website with product listing, shopping cart, and authentication features. I also designed and deployed a responsive personal portfolio website to showcase my projects and technical skills.
           </p>
           
           <p className="text-gray-700 dark:text-gray-300 text-lg">
-            I am known for quick learning, time management, and collaborative teamwork. I am eager to begin my professional career as a Software or Android Developer where I can apply my technical skills and continue to grow as a developer.
+            I am known for being a quick learner, team player, and fast learner. I am passionate about leveraging technology to solve real-world problems and eager to begin my professional career where I can apply my technical skills and continue to grow as a developer.
           </p>
         </div>
       </div>

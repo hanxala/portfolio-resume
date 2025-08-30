@@ -4,24 +4,17 @@ const Projects = () => {
   const projects = [
     {
       id: 1,
-      title: 'Exam Elite - Student Competition App',
-      description: 'Developed an Android application using Kotlin and Firebase that allows students to participate in quizzes and coding competitions. Features include authentication, competition lists, and real-time leaderboard functionality.',
+      title: 'Gotcha (E-Commerce Website)',
+      description: 'Developed a full-fledged e-commerce platform with product listing, shopping cart, and authentication features.',
       image: '/projects/exam-elite.svg',
-      technologies: ['Kotlin', 'Firebase', 'Android Studio'],
+      technologies: ['Next.js', 'React', 'Node.js', 'MongoDB'],
     },
     {
       id: 2,
-      title: 'Personal Portfolio Website',
-      description: 'Designed and developed a responsive personal portfolio website using Next.js and Tailwind CSS to showcase my projects and skills.',
+      title: 'Portfolio Website',
+      description: 'Designed and deployed a responsive personal portfolio website to showcase projects and technical skills.',
       image: '/projects/portfolio.svg',
       technologies: ['Next.js', 'React', 'Tailwind CSS', 'TypeScript'],
-    },
-    {
-      id: 3,
-      title: 'Task Manager Application',
-      description: 'Created a task management web application with features like task creation, deadline setting, priority levels, and progress tracking.',
-      image: '/projects/task-manager.svg',
-      technologies: ['HTML', 'CSS', 'JavaScript', 'LocalStorage API'],
     },
   ];
 
