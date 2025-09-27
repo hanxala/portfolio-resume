@@ -1,12 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Skills as SkillsType } from '@/lib/portfolio-data';
-import SkillsClient from './SkillsClient';
+import { Achievement } from '@/lib/portfolio-data';
+import AchievementsClient from './AchievementsClient';
 
-const Skills = () => {
-  const [skillsData, setSkillsData] = useState<SkillsType | null>(null);
-  const [softSkills, setSoftSkills] = useState<string[]>([]);
+const Achievements = () => {
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -14,10 +13,9 @@ const Skills = () => {
       try {
         const response = await fetch('/api/portfolio');
         const data = await response.json();
-        setSkillsData(data.skills);
-        setSoftSkills(data.softSkills || []);
+        setAchievements(data.achievements || []);
       } catch (error) {
-        console.error('Failed to fetch skills data:', error);
+        console.error('Failed to fetch achievements data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -27,7 +25,7 @@ const Skills = () => {
 
   if (isLoading) {
     return (
-      <section className="py-20 bg-white dark:bg-gray-900">
+      <section className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
         <div className="container mx-auto px-4 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
@@ -35,17 +33,14 @@ const Skills = () => {
     );
   }
 
-  if (!skillsData) {
+  // Only show section if there are achievements/certificates
+  if (!achievements || achievements.length === 0) {
     return null;
   }
 
-  // Pass data to client component for animations
   return (
-    <SkillsClient 
-      skillsData={skillsData} 
-      softSkills={softSkills} 
-    />
+    <AchievementsClient achievements={achievements} />
   );
 };
 
-export default Skills;
+export default Achievements;

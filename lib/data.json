@@ -1,0 +1,135 @@
+{
+  "personal": {
+    "name": "Hanzala Khan",
+    "title": "Software Developer & Android App Developer (Fresher)",
+    "location": "Mumbai, Maharashtra - India",
+    "phone": "+91 8779603467",
+    "email": "hanzalakhan0913@gmail.com",
+    "linkedin": "hanzala-khan",
+    "image": "/profile.jpg"
+  },
+  "personalStatement": "Motivated and detail-oriented Bachelor of Science Information Technology graduate with strong foundations in software development and mobile app design. Seeking an opportunity as a Software Developer or Android App Developer to apply skills in Next.js, React, Node.js, Python, and Kotlin for building efficient and user-friendly applications. Known for being a quick learner, team player, and passionate about leveraging technology to solve real-world problems.",
+  "education": [
+    {
+      "id": 1,
+      "institution": "K.P.B Hinduja College (Mumbai University)",
+      "degree": "Bachelor of Science in Information Technology",
+      "cgpa": "8.62",
+      "location": "Mumbai",
+      "period": "2022 - 2025"
+    },
+    {
+      "id": 2,
+      "institution": "Akbar Peerbhoy College",
+      "degree": "Higher Secondary Certificate (HSC)",
+      "percentage": "75.83%",
+      "location": "Mumbai",
+      "period": "2021 - 2022"
+    },
+    {
+      "id": 3,
+      "institution": "Anjuman-I-Islam Allana English High School (C.S.T)",
+      "degree": "Secondary School Certificate (SSC)",
+      "percentage": "70.60%",
+      "location": "Mumbai",
+      "period": "2019 - 2020"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "name": "Hanzala.co (E-Commerce Website)",
+      "description": "Developed a full-fledged e-commerce platform with product listing, shopping cart, and authentication features.",
+      "technologies": [
+        "Next.js",
+        "React",
+        "Node.js",
+        "MongoDB"
+      ],
+      "liveLink": "https://hanzalaco.vercel.app",
+      "featured": true
+    },
+    {
+      "id": 2,
+      "name": "Portfolio Website",
+      "description": "Designed and deployed a responsive personal portfolio website to showcase projects and technical skills.",
+      "technologies": [
+        "Next.js",
+        "React",
+        "Tailwind CSS",
+        "TypeScript"
+      ],
+      "featured": true
+    },
+    {
+      "id": 1759004826771,
+      "name": "HLB",
+      "description": "new one",
+      "technologies": [],
+      "featured": true,
+      "liveLink": "https://theleatherboutique-52j8hajlt-hanzala-khans-projects.vercel.app"
+    }
+  ],
+  "skills": {
+    "frontend": [
+      "Next.js",
+      "React",
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    "backend": [
+      "Node.js",
+      "MongoDB",
+      "Firebase"
+    ],
+    "versionControl": [
+      "Git",
+      "GitHub"
+    ],
+    "programming": [
+      "Python",
+      "Kotlin (Android Studio)"
+    ]
+  },
+  "softSkills": [
+    "Time Management",
+    "Team Player",
+    "Fast Learner"
+  ],
+  "hobbies": [
+    "Website Development",
+    "Developing Android Apps"
+  ],
+  "achievements": [
+    {
+      "id": 1,
+      "title": "Best Student Project Award",
+      "description": "Awarded for outstanding project work in Information Technology, demonstrating exceptional technical skills and innovation.",
+      "date": "2024-05-15",
+      "organization": "K.P.B Hinduja College",
+      "type": "achievement"
+    },
+    {
+      "id": 2,
+      "title": "JavaScript Fundamentals Certificate",
+      "description": "Completed comprehensive course covering JavaScript ES6+, DOM manipulation, and modern web development practices.",
+      "date": "2024-03-20",
+      "organization": "freeCodeCamp",
+      "type": "certificate",
+      "credentialId": "FCC-JS-2024-001",
+      "credentialUrl": "https://freecodecamp.org/certification/hanzalakhan/javascript-algorithms-and-data-structures"
+    },
+    {
+      "id": 3,
+      "title": "React Developer Certificate",
+      "description": "Advanced React.js certification covering hooks, context, state management, and modern React patterns.",
+      "date": "2024-06-10",
+      "organization": "Meta",
+      "type": "certificate",
+      "credentialId": "META-REACT-2024",
+      "credentialUrl": "https://coursera.org/verify/META-REACT-2024",
+      "expiryDate": "2026-06-10"
+    }
+  ]
+}

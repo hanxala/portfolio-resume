@@ -47,8 +47,14 @@ const Header = () => {
           <Link href="#education" className="text-gray-700 hover:text-primary dark:text-gray-300 dark:hover:text-white transition-colors">
             Education
           </Link>
+          <Link href="#achievements" className="text-gray-700 hover:text-primary dark:text-gray-300 dark:hover:text-white transition-colors">
+            Achievements
+          </Link>
           <Link href="#contact" className="text-gray-700 hover:text-primary dark:text-gray-300 dark:hover:text-white transition-colors">
             Contact
+          </Link>
+          <Link href="/admin" className="bg-primary hover:bg-primary-dark text-white px-3 py-1 rounded-full text-sm font-medium transition-colors">
+            Admin
           </Link>
         </nav>
 
@@ -103,11 +109,25 @@ const Header = () => {
               Education
             </Link>
             <Link 
+              href="#achievements" 
+              className="text-gray-700 hover:text-primary dark:text-gray-300 dark:hover:text-white transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Achievements
+            </Link>
+            <Link 
               href="#contact" 
               className="text-gray-700 hover:text-primary dark:text-gray-300 dark:hover:text-white transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Contact
+            </Link>
+            <Link 
+              href="/admin" 
+              className="bg-primary hover:bg-primary-dark text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors w-fit"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Admin Panel
             </Link>
           </div>
         </div>
