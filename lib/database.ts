@@ -171,7 +171,7 @@ export class MongoDBStorage {
       .sort({ createdAt: -1 })
       .limit(limit)
       .toArray();
-    return results.map(backup => ({
+    return results.map((backup: any) => ({
       id: backup._id,
       created_at: backup.createdAt,
       created_by: backup.createdBy,
