@@ -39,10 +39,31 @@ export async function GET(request: NextRequest) {
     try {
       const dbStorage = getDatabaseStorage();
       
+      if (!dbStorage) {
+        // Fallback data when database is not available
+        return NextResponse.json({
+          success: true,
+          data: {
+            systemInfo: {
+              databaseProvider: 'none',
+              hasPersistentStorage: false,
+              hasCloudBackup: !!(process.env.JSONBIN_API_KEY || process.env.CLOUDINARY_API_KEY),
+              environment: process.env.NODE_ENV || 'development',
+              deploymentPlatform: process.env.VERCEL ? 'Vercel' : 'Other'
+            },
+            recentActivity: [],
+            availableBackups: [],
+            adminEmail: userEmail,
+            lastUpdated: new Date().toISOString(),
+            warning: 'Database not available - using fallback mode'
+          }
+        });
+      }
+      
       // Get dashboard data
       const [auditLog, backups] = await Promise.all([
-        dbStorage.getAuditLog ? dbStorage.getAuditLog(20) : [],
-        dbStorage.getBackups ? dbStorage.getBackups(10) : []
+        dbStorage.getAuditLog?.(20) ?? [],
+        dbStorage.getBackups?.(10) ?? []
       ]);
 
       // Get system info
