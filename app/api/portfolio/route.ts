@@ -57,7 +57,6 @@ export async function POST(request: NextRequest) {
     // Rate limiting check
     const clientIP = request.headers.get('x-forwarded-for') || 
                     request.headers.get('x-real-ip') || 
-                    request.ip || 
                     'unknown';
     
     const rateLimitCheck = checkRateLimit(`${userEmail}-${clientIP}`, 5, 10); // 5 requests per 10 minutes
