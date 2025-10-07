@@ -328,11 +328,8 @@ export class ContentManager {
   }
 
   // Notifications specific methods
-  async createNotification(data: Omit<SiteNotification, 'id' | 'createdAt'>): Promise<SiteNotification> {
-    return this.create<SiteNotification>(COLLECTIONS.NOTIFICATIONS, {
-      ...data,
-      createdAt: new Date()
-    });
+  async createNotification(data: Omit<SiteNotification, 'id' | 'createdAt' | 'updatedAt'>): Promise<SiteNotification> {
+    return this.create<SiteNotification>(COLLECTIONS.NOTIFICATIONS, data);
   }
 
   async getUnreadNotifications(): Promise<SiteNotification[]> {
