@@ -251,42 +251,42 @@ export const COLLECTIONS = {
 export const DATABASE_INDEXES = {
   [COLLECTIONS.BLOG_POSTS]: [
     { fields: { slug: 1 }, options: { unique: true } },
-    { fields: { isPublished: 1, publishedAt: -1 } },
-    { fields: { category: 1 } },
-    { fields: { tags: 1 } }
+    { fields: { isPublished: 1, publishedAt: -1 }, options: {} },
+    { fields: { category: 1 }, options: {} },
+    { fields: { tags: 1 }, options: {} }
   ],
   [COLLECTIONS.TESTIMONIALS]: [
-    { fields: { isPublished: 1, createdAt: -1 } }
+    { fields: { isPublished: 1, createdAt: -1 }, options: {} }
   ],
   [COLLECTIONS.SERVICES]: [
     { fields: { slug: 1 }, options: { unique: true } },
-    { fields: { isActive: 1, order: 1 } }
+    { fields: { isActive: 1, order: 1 }, options: {} }
   ],
   [COLLECTIONS.CONTACT_MESSAGES]: [
-    { fields: { status: 1, createdAt: -1 } },
-    { fields: { email: 1 } }
+    { fields: { status: 1, createdAt: -1 }, options: {} },
+    { fields: { email: 1 }, options: {} }
   ],
   [COLLECTIONS.FAQ]: [
-    { fields: { isPublished: 1, order: 1 } },
-    { fields: { category: 1 } }
+    { fields: { isPublished: 1, order: 1 }, options: {} },
+    { fields: { category: 1 }, options: {} }
   ],
   [COLLECTIONS.NEWSLETTER_SUBSCRIBERS]: [
     { fields: { email: 1 }, options: { unique: true } },
-    { fields: { isActive: 1 } }
+    { fields: { isActive: 1 }, options: {} }
   ],
   [COLLECTIONS.EXPERIENCE]: [
-    { fields: { isPublished: 1, order: 1 } },
-    { fields: { isCurrent: 1, startDate: -1 } }
+    { fields: { isPublished: 1, order: 1 }, options: {} },
+    { fields: { isCurrent: 1, startDate: -1 }, options: {} }
   ],
   [COLLECTIONS.MEDIA]: [
-    { fields: { type: 1, category: 1 } },
-    { fields: { uploadedBy: 1, createdAt: -1 } }
+    { fields: { type: 1, category: 1 }, options: {} },
+    { fields: { uploadedBy: 1, createdAt: -1 }, options: {} }
   ],
   [COLLECTIONS.ANALYTICS]: [
-    { fields: { date: -1 } }
+    { fields: { date: -1 }, options: {} }
   ],
   [COLLECTIONS.CATEGORIES]: [
     { fields: { slug: 1 }, options: { unique: true } },
-    { fields: { isActive: 1, order: 1 } }
+    { fields: { isActive: 1, order: 1 }, options: {} }
   ]
 };
