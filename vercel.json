@@ -1,0 +1,30 @@
+{
+  "env": {
+    "DATABASE_PROVIDER": "@database_provider",
+    "MONGODB_URL": "@mongodb_url",
+    "AUTHORIZED_ADMIN_EMAILS": "@authorized_admin_emails",
+    "ADMIN_PASSWORD": "@admin_password",
+    "CLERK_SECRET_KEY": "@clerk_secret_key",
+    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "@next_public_clerk_publishable_key",
+    "CLOUDINARY_API_SECRET": "@cloudinary_api_secret",
+    "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME": "@next_public_cloudinary_cloud_name",
+    "CLOUDINARY_API_KEY": "@cloudinary_api_key"
+  },
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "regions": ["iad1"],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    }
+  ]
+}

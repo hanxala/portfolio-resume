@@ -8,8 +8,63 @@ import { ExternalLink, Github, Star } from 'lucide-react';
 
 const Projects = () => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [notification, setNotification] = useState<string | null>(null);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
+
+  // Helper function to format URLs properly
+  const formatUrl = (url: string): string => {
+    if (!url || url.trim() === '') return '';
+    
+    const trimmedUrl = url.trim();
+    
+    // If URL already starts with http:// or https://, return as is
+    if (trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://')) {
+      return trimmedUrl;
+    }
+    
+    // If URL starts with //, add https:
+    if (trimmedUrl.startsWith('//')) {
+      return `https:${trimmedUrl}`;
+    }
+    
+    // Otherwise, add https:// prefix
+    return `https://${trimmedUrl}`;
+  };
+
+  // Helper function to handle link clicks with error handling
+  const handleLinkClick = (url: string, linkType: 'demo' | 'code') => {
+    const formattedUrl = formatUrl(url);
+    
+    if (!formattedUrl) {
+      setNotification(`❌ Invalid ${linkType} URL`);
+      setTimeout(() => setNotification(null), 3000);
+      return;
+    }
+
+    try {
+      // Try to create URL object to validate
+      new URL(formattedUrl);
+      
+      // Show opening notification
+      setNotification(`🚀 Opening ${linkType}...`);
+      
+      // Open the link
+      const opened = window.open(formattedUrl, '_blank', 'noopener,noreferrer');
+      
+      // Check if popup was blocked
+      if (!opened || opened.closed || typeof opened.closed == 'undefined') {
+        setNotification(`⚠️ Popup blocked. Please allow popups or copy the link: ${formattedUrl}`);
+        setTimeout(() => setNotification(null), 5000);
+      } else {
+        setTimeout(() => setNotification(null), 1500);
+      }
+    } catch (error) {
+      console.error(`Failed to open ${linkType} link:`, error);
+      setNotification(`❌ Invalid URL format`);
+      setTimeout(() => setNotification(null), 3000);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,7 +101,19 @@ const Projects = () => {
   };
 
   return (
-    <section ref={ref} id="projects" className="py-20 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+    <section ref={ref} id="projects" className="py-20 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 relative">
+      {/* Notification */}
+      {notification && (
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+          className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg px-4 py-2 text-sm font-medium text-gray-900 dark:text-white max-w-md text-center"
+        >
+          {notification}
+        </motion.div>
+      )}
+      
       <div className="container mx-auto px-4">
         <motion.div
           variants={containerVariants}
@@ -126,28 +193,28 @@ const Projects = () => {
                   
                   <div className="flex gap-3">
                     {project.liveLink && (
-                      <motion.a
-                        href={`https://${project.liveLink}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors text-sm font-medium"
+                      <motion.button
+                        onClick={() => handleLinkClick(project.liveLink!, 'demo')}
+                        className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors text-sm font-medium bg-transparent border-none cursor-pointer p-0"
                         whileHover={{ x: 5 }}
+                        whileTap={{ scale: 0.95 }}
+                        title={`Open ${project.name} live demo`}
                       >
                         <ExternalLink size={16} />
                         Live Demo
-                      </motion.a>
+                      </motion.button>
                     )}
                     {project.githubLink && (
-                      <motion.a
-                        href={project.githubLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors text-sm font-medium"
+                      <motion.button
+                        onClick={() => handleLinkClick(project.githubLink!, 'code')}
+                        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors text-sm font-medium bg-transparent border-none cursor-pointer p-0"
                         whileHover={{ x: 5 }}
+                        whileTap={{ scale: 0.95 }}
+                        title={`View ${project.name} source code`}
                       >
                         <Github size={16} />
                         Code
-                      </motion.a>
+                      </motion.button>
                     )}
                   </div>
                 </div>

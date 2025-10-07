@@ -68,6 +68,16 @@
       "technologies": [],
       "featured": true,
       "liveLink": "https://theleatherboutique-52j8hajlt-hanzala-khans-projects.vercel.app"
+    },
+    {
+      "id": 1759829995713,
+      "name": "Hanzz",
+      "description": "E-Commerce website",
+      "technologies": [
+        "Next.js"
+      ],
+      "featured": true,
+      "liveLink": "https://new-hanzz-qpmampdfs-hanzala-khans-projects.vercel.app"
     }
   ],
   "skills": {

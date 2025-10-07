@@ -6,12 +6,16 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "init-db": "node scripts/init-db.js",
+    "check-db": "node scripts/init-db.js",
+    "seed-db": "node scripts/seed-database.js"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.31.10",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.7.0",
+    "dotenv": "^17.2.3",
     "framer-motion": "^12.23.12",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.543.0",
@@ -30,6 +34,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.0",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }

@@ -15,7 +15,15 @@ import {
   Save, 
   Plus, 
   Trash2, 
-  Upload
+  Upload,
+  Database,
+  Shield,
+  Download,
+  RotateCcw,
+  ExternalLink,
+  Github,
+  Eye,
+  AlertCircle
 } from 'lucide-react';
 import { PortfolioData, Project, Education, Achievement } from '@/lib/portfolio-data';
 
@@ -38,6 +46,71 @@ export default function AdminPanel() {
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [healthStatus, setHealthStatus] = useState<any>(null);
+  const [backups, setBackups] = useState<any[]>([]);
+  const [isLoadingHealth, setIsLoadingHealth] = useState(false);
+  const [isLoadingBackups, setIsLoadingBackups] = useState(false);
+
+  // Helper function to format URLs properly
+  const formatUrl = (url: string): string => {
+    if (!url || url.trim() === '') return '';
+    
+    const trimmedUrl = url.trim();
+    
+    // If URL already starts with http:// or https://, return as is
+    if (trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://')) {
+      return trimmedUrl;
+    }
+    
+    // If URL starts with //, add https:
+    if (trimmedUrl.startsWith('//')) {
+      return `https:${trimmedUrl}`;
+    }
+    
+    // Otherwise, add https:// prefix
+    return `https://${trimmedUrl}`;
+  };
+
+  // Helper function to validate URL
+  const validateUrl = (url: string): { isValid: boolean; error?: string } => {
+    if (!url || url.trim() === '') {
+      return { isValid: true }; // Empty URL is valid (optional field)
+    }
+
+    try {
+      new URL(formatUrl(url));
+      return { isValid: true };
+    } catch {
+      return { isValid: false, error: 'Invalid URL format' };
+    }
+  };
+
+  // Helper function to preview URL
+  const previewUrl = (url: string, linkType: string) => {
+    const formattedUrl = formatUrl(url);
+    const validation = validateUrl(url);
+    
+    if (!validation.isValid) {
+      setMessage(`❌ Invalid ${linkType} URL format`);
+      setTimeout(() => setMessage(''), 3000);
+      return;
+    }
+
+    try {
+      const opened = window.open(formattedUrl, '_blank', 'noopener,noreferrer');
+      
+      if (!opened || opened.closed || typeof opened.closed == 'undefined') {
+        setMessage(`⚠️ Popup blocked. URL: ${formattedUrl}`);
+        setTimeout(() => setMessage(''), 5000);
+      } else {
+        setMessage(`🚀 Opened ${linkType} preview`);
+        setTimeout(() => setMessage(''), 2000);
+      }
+    } catch (error) {
+      setMessage(`❌ Failed to open ${linkType}`);
+      setTimeout(() => setMessage(''), 3000);
+    }
+  };
 
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
@@ -206,6 +279,106 @@ export default function AdminPanel() {
     });
   };
 
+  // Database management functions
+  const checkHealth = async () => {
+    setIsLoadingHealth(true);
+    try {
+      const response = await fetch('/api/admin/health');
+      const health = await response.json();
+      setHealthStatus(health);
+    } catch (error) {
+      console.error('Failed to check health:', error);
+      setMessage('Failed to check database health');
+    } finally {
+      setIsLoadingHealth(false);
+    }
+  };
+
+  const loadBackups = async () => {
+    setIsLoadingBackups(true);
+    try {
+      const response = await fetch('/api/admin/backup');
+      const result = await response.json();
+      if (result.success) {
+        setBackups(result.backups);
+      } else {
+        setMessage(result.error || 'Failed to load backups');
+      }
+    } catch (error) {
+      console.error('Failed to load backups:', error);
+      setMessage('Failed to load backups');
+    } finally {
+      setIsLoadingBackups(false);
+    }
+  };
+
+  const createBackup = async () => {
+    try {
+      const response = await fetch('/api/admin/backup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'create' })
+      });
+      const result = await response.json();
+      if (result.success) {
+        setMessage('✅ Backup created successfully!');
+        loadBackups(); // Reload backup list
+      } else {
+        setMessage(`❌ Backup failed: ${result.error}`);
+      }
+    } catch (error) {
+      setMessage('❌ Backup creation failed');
+    }
+    setTimeout(() => setMessage(''), 5000);
+  };
+
+  const restoreBackup = async (backupId: string) => {
+    if (!confirm('Are you sure you want to restore this backup? Current data will be backed up first.')) {
+      return;
+    }
+    try {
+      const response = await fetch('/api/admin/backup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'restore', backupId })
+      });
+      const result = await response.json();
+      if (result.success) {
+        setMessage('✅ Data restored successfully!');
+        // Reload the page to show restored data
+        window.location.reload();
+      } else {
+        setMessage(`❌ Restore failed: ${result.error}`);
+      }
+    } catch (error) {
+      setMessage('❌ Restore operation failed');
+    }
+    setTimeout(() => setMessage(''), 5000);
+  };
+
+  const exportData = async () => {
+    try {
+      const response = await fetch('/api/admin/backup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'export' })
+      });
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `portfolio-backup-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      setMessage('✅ Data exported successfully!');
+    } catch (error) {
+      setMessage('❌ Export failed');
+    }
+    setTimeout(() => setMessage(''), 3000);
+  };
+
   // Show loading state while Clerk is initializing
   if (!isLoaded) {
     return (
@@ -267,6 +440,7 @@ export default function AdminPanel() {
     { id: 'projects', label: 'Projects', icon: FolderOpen },
     { id: 'skills', label: 'Skills', icon: Code },
     { id: 'achievements', label: 'Achievements & Certificates', icon: Award },
+    { id: 'database', label: 'Database Management', icon: Database },
   ];
 
   return (
@@ -573,13 +747,90 @@ export default function AdminPanel() {
                               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Live Link
                               </label>
-                              <input
-                                type="text"
-                                value={project.liveLink || ''}
-                                onChange={(e) => updateProject(project.id, 'liveLink', e.target.value)}
-                                placeholder="example.com"
-                                className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                              />
+                              <div className="relative">
+                                <input
+                                  type="text"
+                                  value={project.liveLink || ''}
+                                  onChange={(e) => updateProject(project.id, 'liveLink', e.target.value)}
+                                  placeholder="https://example.com or example.com"
+                                  className={`w-full px-3 py-2 pr-24 rounded-lg border ${
+                                    project.liveLink && !validateUrl(project.liveLink).isValid
+                                      ? 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/20'
+                                      : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'
+                                  } text-gray-900 dark:text-white`}
+                                />
+                                {project.liveLink && (
+                                  <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
+                                    {!validateUrl(project.liveLink).isValid && (
+                                      <AlertCircle size={16} className="text-red-500" title="Invalid URL" />
+                                    )}
+                                    <button
+                                      type="button"
+                                      onClick={() => previewUrl(project.liveLink!, 'live demo')}
+                                      className="p-1 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                                      title="Preview live demo"
+                                    >
+                                      <ExternalLink size={14} />
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                              {project.liveLink && !validateUrl(project.liveLink).isValid && (
+                                <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                  <AlertCircle size={12} />
+                                  Invalid URL format. Try: https://example.com
+                                </p>
+                              )}
+                              {project.liveLink && validateUrl(project.liveLink).isValid && (
+                                <p className="text-green-600 text-xs mt-1">
+                                  ✓ Valid URL: {formatUrl(project.liveLink)}
+                                </p>
+                              )}
+                            </div>
+                            
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                GitHub Repository
+                              </label>
+                              <div className="relative">
+                                <input
+                                  type="text"
+                                  value={project.githubLink || ''}
+                                  onChange={(e) => updateProject(project.id, 'githubLink', e.target.value)}
+                                  placeholder="https://github.com/username/repo"
+                                  className={`w-full px-3 py-2 pr-24 rounded-lg border ${
+                                    project.githubLink && !validateUrl(project.githubLink).isValid
+                                      ? 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/20'
+                                      : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'
+                                  } text-gray-900 dark:text-white`}
+                                />
+                                {project.githubLink && (
+                                  <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
+                                    {!validateUrl(project.githubLink).isValid && (
+                                      <AlertCircle size={16} className="text-red-500" title="Invalid URL" />
+                                    )}
+                                    <button
+                                      type="button"
+                                      onClick={() => previewUrl(project.githubLink!, 'GitHub repository')}
+                                      className="p-1 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors"
+                                      title="View GitHub repository"
+                                    >
+                                      <Github size={14} />
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                              {project.githubLink && !validateUrl(project.githubLink).isValid && (
+                                <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                  <AlertCircle size={12} />
+                                  Invalid URL format. Try: https://github.com/username/repo
+                                </p>
+                              )}
+                              {project.githubLink && validateUrl(project.githubLink).isValid && (
+                                <p className="text-green-600 text-xs mt-1">
+                                  ✓ Valid URL: {formatUrl(project.githubLink)}
+                                </p>
+                              )}
                             </div>
                           </div>
                           
@@ -1062,6 +1313,162 @@ export default function AdminPanel() {
                         />
                       </div>
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'database' && (
+                <div className="space-y-6">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                    Database Management
+                  </h2>
+                  
+                  {/* Health Check Section */}
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                        <Shield size={20} />
+                        System Health
+                      </h3>
+                      <motion.button
+                        onClick={checkHealth}
+                        disabled={isLoadingHealth}
+                        whileHover={{ scale: 1.05 }}
+                        className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+                      >
+                        {isLoadingHealth ? 'Checking...' : 'Check Health'}
+                      </motion.button>
+                    </div>
+                    
+                    {healthStatus && (
+                      <div className="space-y-4">
+                        <div className={`p-4 rounded-lg border-2 ${
+                          healthStatus.status === 'healthy' 
+                            ? 'border-green-200 bg-green-50 dark:bg-green-900/20'
+                            : 'border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20'
+                        }`}>
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className={`w-3 h-3 rounded-full ${
+                              healthStatus.status === 'healthy' ? 'bg-green-500' : 'bg-yellow-500'
+                            }`} />
+                            <span className="font-medium capitalize">{healthStatus.status}</span>
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                            Last checked: {new Date(healthStatus.timestamp).toLocaleString()}
+                          </p>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                              <h4 className="font-medium mb-2">Database</h4>
+                              <div className="text-sm">
+                                <p>Provider: {healthStatus.database.provider}</p>
+                                <p className={`flex items-center gap-1 ${
+                                  healthStatus.database.connected ? 'text-green-600' : 'text-red-600'
+                                }`}>
+                                  {healthStatus.database.connected ? '✅ Connected' : '❌ Disconnected'}
+                                </p>
+                                {healthStatus.database.error && (
+                                  <p className="text-red-600 text-xs mt-1">Error: {healthStatus.database.error}</p>
+                                )}
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <h4 className="font-medium mb-2">Cloud Backup</h4>
+                              <div className="text-sm space-y-1">
+                                <p>JSONBin: {healthStatus.cloudStorage.jsonbin ? '✅ Available' : '❌ Not configured'}</p>
+                                <p>GitHub: {healthStatus.cloudStorage.github ? '✅ Available' : '❌ Not configured'}</p>
+                                <p>Pastebin: {healthStatus.cloudStorage.pastebin ? '✅ Available' : '❌ Not configured'}</p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-medium mb-2">Recommendations</h4>
+                            <ul className="text-sm space-y-1">
+                              {healthStatus.recommendations.map((rec: string, idx: number) => (
+                                <li key={idx} className="flex items-start gap-2">
+                                  <span className="text-xs mt-1">•</span>
+                                  <span>{rec}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Backup Management Section */}
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                        <Database size={20} />
+                        Backup Management
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        <motion.button
+                          onClick={loadBackups}
+                          disabled={isLoadingBackups}
+                          whileHover={{ scale: 1.05 }}
+                          className="bg-gray-600 hover:bg-gray-700 disabled:opacity-50 text-white px-3 py-2 rounded-lg text-sm"
+                        >
+                          {isLoadingBackups ? 'Loading...' : 'Refresh'}
+                        </motion.button>
+                        <motion.button
+                          onClick={createBackup}
+                          whileHover={{ scale: 1.05 }}
+                          className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm flex items-center gap-2"
+                        >
+                          <Plus size={16} />
+                          Create Backup
+                        </motion.button>
+                        <motion.button
+                          onClick={exportData}
+                          whileHover={{ scale: 1.05 }}
+                          className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm flex items-center gap-2"
+                        >
+                          <Download size={16} />
+                          Export Data
+                        </motion.button>
+                      </div>
+                    </div>
+                    
+                    {backups.length > 0 && (
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-gray-900 dark:text-white mb-3">Available Backups ({backups.length})</h4>
+                        <div className="space-y-2 max-h-64 overflow-y-auto">
+                          {backups.map((backup) => (
+                            <div key={backup.id} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 bg-white dark:bg-gray-700 rounded border">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 text-sm">
+                                  <span className="font-medium">#{backup.id.slice(-8)}</span>
+                                  <span className="text-gray-500">by {backup.created_by}</span>
+                                </div>
+                                <div className="text-xs text-gray-500 mt-1">
+                                  {new Date(backup.created_at).toLocaleString()} • {backup.backup_reason}
+                                </div>
+                              </div>
+                              <motion.button
+                                onClick={() => restoreBackup(backup.id)}
+                                whileHover={{ scale: 1.05 }}
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm flex items-center gap-1 w-full sm:w-auto justify-center"
+                              >
+                                <RotateCcw size={14} />
+                                Restore
+                              </motion.button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {backups.length === 0 && !isLoadingBackups && (
+                      <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                        <Database className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                        <p>No backups found. Click "Create Backup" to create your first backup.</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
