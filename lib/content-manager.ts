@@ -67,12 +67,12 @@ export class ContentManager {
     }
   }
 
-  private async getCollection<T>(collectionName: string): Promise<Collection<T & Document>> {
+  private async getCollection<T>(collectionName: string): Promise<Collection<any>> {
     await this.connect();
     if (!this.db) {
       throw new Error('Database not connected');
     }
-    return this.db.collection<T & Document>(collectionName);
+    return this.db.collection(collectionName);
   }
 
   // Generic CRUD operations
@@ -104,7 +104,7 @@ export class ContentManager {
     
     await collection.updateOne(
       { id } as any,
-      { $set: updateData }
+      { $set: updateData as any }
     );
     
     return this.findById<T>(collectionName, id);
