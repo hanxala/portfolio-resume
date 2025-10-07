@@ -762,7 +762,7 @@ export default function AdminPanel() {
                                 {project.liveLink && (
                                   <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
                                     {!validateUrl(project.liveLink).isValid && (
-                                      <AlertCircle size={16} className="text-red-500" title="Invalid URL" />
+                                      <AlertCircle size={16} className="text-red-500" />
                                     )}
                                     <button
                                       type="button"
@@ -807,7 +807,7 @@ export default function AdminPanel() {
                                 {project.githubLink && (
                                   <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
                                     {!validateUrl(project.githubLink).isValid && (
-                                      <AlertCircle size={16} className="text-red-500" title="Invalid URL" />
+                                      <AlertCircle size={16} className="text-red-500" />
                                     )}
                                     <button
                                       type="button"
