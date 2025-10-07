@@ -1,4 +1,4 @@
-import { MongoClient, Db, Collection, ObjectId } from 'mongodb';
+import { MongoClient, Db, Collection, ObjectId, Document } from 'mongodb';
 import { 
   BlogPost, 
   Testimonial, 
@@ -67,12 +67,12 @@ export class ContentManager {
     }
   }
 
-  private async getCollection<T>(collectionName: string): Promise<Collection<T>> {
+  private async getCollection<T>(collectionName: string): Promise<Collection<T & Document>> {
     await this.connect();
     if (!this.db) {
       throw new Error('Database not connected');
     }
-    return this.db.collection<T>(collectionName);
+    return this.db.collection<T & Document>(collectionName);
   }
 
   // Generic CRUD operations
