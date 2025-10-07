@@ -13,6 +13,7 @@ export interface BlogPost {
   tags: string[];
   category: string;
   publishedAt: Date;
+  createdAt: Date;
   updatedAt: Date;
   isPublished: boolean;
   readTime: number; // in minutes

@@ -74,7 +74,7 @@ export class ContentManager {
   }
 
   // Generic CRUD operations
-  async create<T>(collectionName: string, data: Omit<T, 'id'> & Partial<Pick<T, 'id'>>): Promise<T> {
+  async create<T>(collectionName: string, data: Omit<T, 'id' | 'createdAt' | 'updatedAt'>): Promise<T> {
     const collection = await this.getCollection<T>(collectionName);
     const id = new ObjectId().toString();
     const document = { ...data, id, createdAt: new Date(), updatedAt: new Date() } as T;
