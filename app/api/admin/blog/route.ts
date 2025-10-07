@@ -116,6 +116,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const now = new Date();
     const blogPost = await contentManager.create<BlogPost>(COLLECTIONS.BLOG_POSTS, {
       title,
       slug,
@@ -128,7 +129,9 @@ export async function POST(request: NextRequest) {
       metaTitle: metaTitle || title,
       metaDescription: metaDescription || excerpt,
       isPublished: isPublished || false,
-      publishedAt: isPublished ? new Date() : new Date(),
+      publishedAt: isPublished ? now : now,
+      createdAt: now,
+      updatedAt: now,
       readTime,
       views: 0
     });

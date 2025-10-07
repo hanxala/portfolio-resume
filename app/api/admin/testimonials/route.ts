@@ -78,6 +78,7 @@ export async function POST(request: NextRequest) {
     }
 
     const contentManager = getContentManager();
+    const now = new Date();
     const testimonial = await contentManager.create<Testimonial>(COLLECTIONS.TESTIMONIALS, {
       name: name.trim(),
       position: position.trim(),
@@ -85,7 +86,9 @@ export async function POST(request: NextRequest) {
       content: content.trim(),
       rating,
       image: image?.trim(),
-      isPublished: isPublished || false
+      isPublished: isPublished || false,
+      createdAt: now,
+      updatedAt: now
     });
 
     return NextResponse.json({
