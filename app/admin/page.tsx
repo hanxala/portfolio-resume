@@ -162,11 +162,13 @@ export default function AdminPanel() {
 
       if (response.ok) {
         console.log('Save successful!');
-        const isProduction = window.location.hostname.includes('vercel.app');
-        if (isProduction) {
-          setMessage('✅ Data saved successfully! Note: In production, changes are temporary and will reset on redeployment. For permanent changes, edit locally and redeploy.');
+        const result = await response.json();
+        
+        // Check if database persistence is enabled
+        if (result.persistent) {
+          setMessage('✅ Data saved successfully to database! Changes are permanent and will persist across deployments.');
         } else {
-          setMessage('✅ Data saved successfully!');
+          setMessage('⚠️ Data saved to temporary storage only. Changes will reset on redeployment. Please configure DATABASE_PROVIDER for permanent storage.');
         }
         setTimeout(() => setMessage(''), 8000);
       } else {
