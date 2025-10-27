@@ -163,6 +163,8 @@ export default function AdminPanel() {
       if (response.ok) {
         console.log('Save successful!');
         const result = await response.json();
+        console.log('🔍 API Response:', result);
+        console.log('🔍 result.persistent:', result.persistent);
         
         // Check if database persistence is enabled
         if (result.persistent) {

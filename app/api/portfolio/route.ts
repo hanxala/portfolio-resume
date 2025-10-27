@@ -114,6 +114,8 @@ export async function POST(request: NextRequest) {
     await savePortfolioData(sanitizedData, userEmail);
     
     console.log('✅ Portfolio data saved successfully to persistent storage!');
+    console.log('🔍 DATABASE_PROVIDER:', process.env.DATABASE_PROVIDER);
+    console.log('🔍 persistent flag:', !!process.env.DATABASE_PROVIDER);
     
     return NextResponse.json({ 
       success: true,
