@@ -175,43 +175,39 @@ export async function savePortfolioData(data: PortfolioData, adminEmail?: string
     productionData = data;
     
     const email = adminEmail || 'unknown@admin.com';
-    const savePromises: Promise<any>[] = [];
+    let dbSaveSuccess = false;
+    let dbError: Error | null = null;
     
-    // Priority 1: Save to database (persistent across deployments)
+    // Priority 1: Save to database (MUST succeed for production persistence)
     if (dbStorage) {
-      savePromises.push(
-        dbStorage.savePortfolioData(data, email)
-          .then(() => console.log('✅ Data saved to persistent database'))
-          .catch((error: any) => {
-            console.error('❌ Database save failed:', error);
-            throw error;
-          })
-      );
+      try {
+        await dbStorage.savePortfolioData(data, email);
+        console.log('✅ Data saved to persistent database');
+        dbSaveSuccess = true;
+      } catch (error) {
+        console.error('❌ Database save failed:', error);
+        dbError = error instanceof Error ? error : new Error('Database save failed');
+        // Don't throw yet - try other storage methods
+      }
+    } else {
+      console.warn('⚠️ No database configured - changes will not persist across deployments');
     }
     
-    // Priority 2: Save to cloud storage (backup)
-    savePromises.push(
-      saveToCloud(data, email)
-        .then(() => console.log('✅ Data backed up to cloud storage'))
-        .catch((error: any) => console.warn('⚠️ Cloud backup failed:', error))
-    );
+    // Priority 2: Save to cloud storage (backup - don't block on failure)
+    saveToCloud(data, email)
+      .then(() => console.log('✅ Data backed up to cloud storage'))
+      .catch((error: any) => console.warn('⚠️ Cloud backup failed:', error));
     
-    // Priority 3: File system save (local development)
+    // Priority 3: File system save (local development or temp cache)
     if (process.env.NODE_ENV === 'development') {
-      savePromises.push(
-        new Promise<void>((resolve, reject) => {
-          try {
-            fs.writeFileSync(dataPath, JSON.stringify(data, null, 2), 'utf8');
-            console.log('✅ Data saved to local file');
-            resolve();
-          } catch (error) {
-            console.warn('⚠️ Local file save failed:', error);
-            reject(error);
-          }
-        })
-      );
+      try {
+        fs.writeFileSync(dataPath, JSON.stringify(data, null, 2), 'utf8');
+        console.log('✅ Data saved to local file');
+      } catch (error) {
+        console.warn('⚠️ Local file save failed:', error);
+      }
     } else {
-      // Production: still try temp file for immediate access
+      // Production: cache in temp file for immediate access
       const targetPath = getTempDataPath();
       try {
         fs.writeFileSync(targetPath, JSON.stringify(data, null, 2), 'utf8');
@@ -221,17 +217,16 @@ export async function savePortfolioData(data: PortfolioData, adminEmail?: string
       }
     }
     
-    // Wait for database save to complete, but don't fail on cloud/file errors
-    try {
-      await Promise.allSettled(savePromises);
-      console.log('Portfolio data save operations completed');
-    } catch (error) {
-      console.error('Critical save error:', error);
-      throw new Error('Failed to save portfolio data to persistent storage');
+    // In production, database save MUST succeed
+    if (process.env.NODE_ENV === 'production' && !dbSaveSuccess && dbStorage) {
+      console.error('🚨 CRITICAL: Database save failed in production');
+      throw dbError || new Error('Failed to save portfolio data to persistent storage');
     }
     
+    console.log('✅ Portfolio data save operations completed successfully');
+    
   } catch (error) {
-    console.error('Error saving portfolio data:', error);
-    throw new Error('Failed to save portfolio data');
+    console.error('❌ Error saving portfolio data:', error);
+    throw error instanceof Error ? error : new Error('Failed to save portfolio data');
   }
 }

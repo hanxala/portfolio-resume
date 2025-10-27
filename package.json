@@ -9,7 +9,8 @@
     "lint": "eslint",
     "init-db": "node scripts/init-db.js",
     "check-db": "node scripts/init-db.js",
-    "seed-db": "node scripts/seed-database.js"
+    "seed-db": "node scripts/seed-database.js",
+    "migrate-db": "node scripts/migrate-to-database.js"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.31.10",
