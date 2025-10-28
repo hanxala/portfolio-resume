@@ -158,6 +158,7 @@ export default function AdminPanel() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
+        cache: 'no-store',
       });
 
       if (response.ok) {
@@ -165,9 +166,11 @@ export default function AdminPanel() {
         const result = await response.json();
         console.log('🔍 API Response:', result);
         console.log('🔍 result.persistent:', result.persistent);
+        console.log('🔍 typeof result.persistent:', typeof result.persistent);
+        console.log('🔍 result.persistent === true:', result.persistent === true);
         
         // Check if database persistence is enabled
-        if (result.persistent) {
+        if (result.persistent === true) {
           setMessage('✅ Data saved successfully to database! Changes are permanent and will persist across deployments.');
         } else {
           setMessage('⚠️ Data saved to temporary storage only. Changes will reset on redeployment. Please configure DATABASE_PROVIDER for permanent storage.');
